@@ -1,0 +1,22 @@
+<div class="p-3 col-lg-6 offset-lg-3">
+    <h3 class="mb-3">Jelszómódosítás</h3>
+
+    <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="oldPassword" placeholder="Old password">
+        <label for="oldPassword">Régi jelszó</label>
+    </div>
+
+    <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="newPassword" placeholder="New password">
+        <label for="newPassword">Új jelszó</label>
+    </div>
+
+    <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="newPasswordAgain" placeholder="Password">
+        <label for="newPasswordAgain">Új jelszó újra</label>
+    </div>
+
+    <div class="d-flex gap-3">
+        <button class="mb-3 btn btn-primary" (click)="save()"><i class="bi bi-arrow-repeat"></i>&nbsp;&nbsp;Jelszómódosítás</button>
+    </div>
+</div>
