@@ -15,7 +15,19 @@ export class AuthService {
   constructor() { }
 
   hasToken(): boolean {
-    return !!sessionStorage.getItem(this.tokenName);
+    const session = sessionStorage.getItem(this.tokenName);
+    if (session) return true;
+
+    const local = localStorage.getItem(this.tokenName);
+    if (local){
+      sessionStorage.setItem(this.tokenName, local);
+      return true;
+    }
+    return false;
+  }
+
+  storeUser(token: string){
+    localStorage.setItem(this.tokenName, token);
   }
 
   login(token: string) {
@@ -24,6 +36,7 @@ export class AuthService {
   }
   logout() {
     sessionStorage.removeItem(this.tokenName);
+    localStorage.removeItem(this.tokenName);
     this.isLoggedIn.next(false);
   }
 
@@ -37,7 +50,8 @@ export class AuthService {
 
   isAdmin() : boolean {
     const user = this.loggedUser();
-    return user.role === 'admin';
+    if(user) return user[0].role === 'admin';
+    return false;
   }
 
   isLoggedUser() : boolean {

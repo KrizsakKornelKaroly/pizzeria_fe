@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterModule } from "@angular/router";
+import { Router, RouterModule } from "@angular/router";
 import { ApiService } from '../../../services/api.service';
 import { MessageService } from '../../../services/message.service';
 import { FormsModule } from '@angular/forms';
@@ -22,10 +22,13 @@ export class LoginComponent {
     role: ''
   };
 
+  rememberMe : boolean = false;
+
   constructor(
     private api: ApiService,
     private message: MessageService,
-    private auth: AuthService
+    private auth: AuthService,
+    private router: Router
   ) { }
   login(){
     this.api.login('users', this.user).then(res => {
@@ -33,9 +36,12 @@ export class LoginComponent {
         this.message.show('danger', 'Hiba', res.message);
         return;
       }
+      if(this.rememberMe){
+        this.auth.storeUser(JSON.stringify(res.data));
+      }
       this.auth.login(JSON.stringify(res.data));
       this.message.show('success', 'Siker', res.message);
-
+      this.router.navigate(['/pizzalista']);
     });
   }
 }
