@@ -2,35 +2,35 @@
     <h3 class="mb-3">Update my profile</h3>
 
     <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="username" placeholder="">
-        <label for="username">Username</label>
+        <input type="text" class="form-control" id="name" placeholder="" [(ngModel)]="userData.name">
+        <label for="name">Név</label>
     </div>
 
     <div class="form-floating mb-3">
-        <input type="email" class="form-control" id="email" placeholder="name@example.com">
-        <label for="email">Email address</label>
+        <input type="email" class="form-control" id="email" placeholder="name@example.com" [(ngModel)]="userData.email">
+        <label for="email">Email cím</label>
     </div>
 
     <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="phone" placeholder="Phone mumber">
-        <label for="phone">Phone number</label>
+        <input type="text" class="form-control" id="phone" placeholder="Telefonszám" [(ngModel)]="userData.phone">
+        <label for="phone">Telefonszám</label>
     </div>
 
     <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="address" placeholder="Address">
-        <label for="address">Address</label>
+        <input type="text" class="form-control" id="address" placeholder="Cím" [(ngModel)]="userData.address">
+        <label for="address">Cím</label>
     </div>
 
     <hr>
 
     <div class="form-floating mb-3">
-        <input type="date" class="form-control" id="regDate" placeholder="Registration date" disabled>
-        <label for="regDate">Registration date</label>
+        <input type="date" class="form-control" id="regDate" placeholder="Regisztráció dátuma" disabled [(ngModel)]="userData.reg">
+        <label for="regDate">Regisztráció dátuma</label>
     </div>
 
     <div class="form-floating mb-3">
-        <input type="date" class="form-control" id="logDate" placeholder="Last login date" disabled>
-        <label for="logDate">Last login date</label>
+        <input type="date" class="form-control" id="logDate" placeholder="Utolsó bejelentkezés" disabled [(ngModel)]="userData.last">
+        <label for="logDate">Utolsó bejelentkezés</label>
     </div>
 
 
