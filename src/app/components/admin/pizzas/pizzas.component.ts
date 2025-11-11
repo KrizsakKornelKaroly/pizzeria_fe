@@ -26,6 +26,7 @@ export class PizzasComponent implements OnInit {
   totalPages = 1;
   pagedPizzas: Pizza[] = [];
 
+  selectedFile: File | null = null;
 
   formModal: any;
   confirmModal: any;
@@ -76,11 +77,25 @@ export class PizzasComponent implements OnInit {
     });
   }
 
-  save() {
+  async save() {
 
     if (!this.pizza.name || this.pizza.price == 0 || this.pizza.calories == 0) {
       this.message.show('danger', 'Hiba', 'Kérlek töltsd ki a kötelező mezőket!');
       return;
+    }
+    if (this.selectedFile) {
+      const formData = new FormData();
+      formData.append('image', this.selectedFile);
+
+      const res = await this.api.upload(formData);
+
+      if (res.status != 200) {
+        this.message.show('danger', 'Hiba', 'Sikertelen fájl feltöltés!');
+      }
+      else {
+        this.pizza.image = res.data.filename;
+      }
+
     }
 
     if (this.editMode) {
@@ -89,7 +104,8 @@ export class PizzasComponent implements OnInit {
           this.message.show('danger', 'Hiba', 'Ilyen nevű pizza már létezik!');
           return;
         }
-        this.pizza.image = '';
+        //this.pizza.image = '';
+
         this.api.update('pizzas', this.pizza.id, this.pizza).then(res => {
           this.message.show('success', 'Siker', 'Pizza módosítva!');
           this.formModal.hide();
@@ -150,6 +166,21 @@ export class PizzasComponent implements OnInit {
         price: 0
       };
       this.getPizzas();
+    });
+  }
+
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
+  }
+
+  deleteImage(id: number, filename: string) {
+    this.api.deleteImage(filename).then(res => {
+      if (res.status !== 200) {
+        this.pizza.image = '';
+        this.api.update('pizzas', id, this.pizza).then(res => {
+          this.message.show('success', 'Siker', 'Kép törölve!');
+        });
+      }
     });
   }
 

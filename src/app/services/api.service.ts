@@ -12,16 +12,16 @@ export class ApiService {
   constructor() { }
 
   async registration(table: string, data: any) {
-    try{
+    try {
       const response = await axios.post(`${this.SERVER}/${table}/registration`, data);
-      return{
+      return {
         status: 200,
         message: "Sikeres regisztráció! Most már bejelentkezhet.",
         data: response.data
       }
     }
     catch (error: any) {
-      return{
+      return {
         status: 500,
         message: error.response.data.error
       }
@@ -29,22 +29,55 @@ export class ApiService {
   }
 
   async login(table: string, data: any) {
-    try{
+    try {
       const response = await axios.post(`${this.SERVER}/${table}/login`, data);
-      return{
+      return {
         status: 200,
         message: "Sikeres bejelentkezés!",
         data: response.data
       }
     }
     catch (error: any) {
-      return{
+      return {
         status: 500,
         message: error.response
       }
     }
   }
 
+  async upload(formdata: FormData): Promise<ApiResponse> {
+    try {
+      const response = await axios.post(`${this.SERVER}/upload`, formdata);
+      return {
+        status: 200,
+        data: response.data
+      }
+
+    } catch (error: any) {
+      return {
+        status: 500,
+        message: 'Hiba történt a fájl feltöltésekor!'
+      };
+
+    }
+  }
+
+  async deleteImage(filename : string) : Promise<ApiResponse>{
+    try {
+      const response = await axios.delete(`${this.SERVER}/image/${filename}`);
+      return {
+        status: 200,
+        data: response.data
+      }
+
+    } catch (error: any) {
+      return {
+        status: 500,
+        message: 'Hiba történt a fájl törlésekor!'
+      };
+
+    }
+  }
 
   async selectAll(table: string): Promise<ApiResponse> {
     try {

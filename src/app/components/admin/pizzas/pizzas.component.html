@@ -19,16 +19,16 @@
   <tbody>
     <tr *ngFor="let pizza of pagedPizzas; let i = index">
       <td>{{i+1}}</td>
-      <td>{{pizza.image}}</td>
+      <td>
+        <img *ngIf="pizza.image" src="http://localhost:3000/uploads/{{pizza.image}}" alt="{{pizza.name}}" class="thumbnail">
+      </td>
       <td>{{pizza.name}}</td>
       <td>{{pizza.description}}</td>
       <td class="text-end">{{pizza.calories | numberFormat}} kcal</td>
       <td class="text-end">{{pizza.price | numberFormat}} {{currency}}</td>
       <td class="text-end">
-        <button class="btn btn-warning mr-2" title="Módosítás"><i class="bi bi-pen"
-            (click)="getPizza(pizza.id)"></i></button>
-        <button class="btn btn-danger" title="Törlés"><i class="bi bi-trash"
-            (click)="confirmDelete(pizza.id)"></i></button>
+        <button class="btn btn-warning mr-2" title="Módosítás" (click)="getPizza(pizza.id)"><i class="bi bi-pen"></i></button>
+        <button class="btn btn-danger" title="Törlés" (click)="confirmDelete(pizza.id)"><i class="bi bi-trash"></i></button>
       </td>
     </tr>
   </tbody>
@@ -85,6 +85,21 @@
         <div class="form-floating mb-3">
           <input type="number" class="form-control" id="price" placeholder="Ár" [(ngModel)]="pizza.price">
           <label for="price">Ár <em>*</em></label>
+        </div>
+
+
+        <div class="mb-3" *ngIf="pizza.image != ''">
+          <label for="image" class="form-label">Kép:</label>
+          <div class="mb-3">
+            <img src="http://localhost:3000/uploads/{{pizza.image}}" alt="{{pizza.name}}" class="thumbnail">
+            <button class="btn btn-danger btn-sm ms-2" *ngIf="pizza.image" (click)="deleteImage(pizza.id, pizza.image)"><i class="bi bi-trash"></i></button>
+          </div>
+          <input class="form-control" type="file" id="image" accept="image/*" (change)="onFileSelected($event)">
+        </div>
+
+        <div class="mb-3" *ngIf="pizza.image == ''">
+          <label for="image" class="form-label">Kép:</label>
+          <input class="form-control" type="file" id="image" accept="image/*" (change)="onFileSelected($event)">
         </div>
 
         <div class="form-floating mb-3">
