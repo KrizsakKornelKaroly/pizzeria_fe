@@ -20,7 +20,7 @@
     <tr *ngFor="let pizza of pagedPizzas; let i = index">
       <td>{{i+1}}</td>
       <td>
-        <img *ngIf="pizza.image" src="http://localhost:3000/uploads/{{pizza.image}}" alt="{{pizza.name}}" class="thumbnail">
+        <img *ngIf="pizza.image" src="{{serverUrl}}/uploads/{{pizza.image}}" alt="{{pizza.name}}" class="thumbnail" (click)="openLightbox(pizza.image)">
       </td>
       <td>{{pizza.name}}</td>
       <td>{{pizza.description}}</td>
@@ -91,7 +91,7 @@
         <div class="mb-3" *ngIf="pizza.image != ''">
           <label for="image" class="form-label">Kép:</label>
           <div class="mb-3">
-            <img src="http://localhost:3000/uploads/{{pizza.image}}" alt="{{pizza.name}}" class="thumbnail">
+            <img src="{{serverUrl}}/uploads/{{pizza.image}}" alt="{{pizza.name}}" class="thumbnail" *ngIf="pizza.image">
             <button class="btn btn-danger btn-sm ms-2" *ngIf="pizza.image" (click)="deleteImage(pizza.id, pizza.image)"><i class="bi bi-trash"></i></button>
           </div>
           <input class="form-control" type="file" id="image" accept="image/*" (change)="onFileSelected($event)">
@@ -109,7 +109,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
+        <button type="button" class="btn btn-secondary" (click)="cancel()"><i
             class="bi bi-x-circle"></i>&nbsp;Mégsem</button>
         <button type="button" class="btn btn-primary" (click)="save()"><i class="bi bi-floppy"></i>&nbsp;Mentés</button>
       </div>
@@ -139,3 +139,6 @@
     </div>
   </div>
 </div>
+
+
+<app-lightbox [imageUrl]="lightboxImage" [visible]="lightboxVisible" (closed)="lightboxVisible = false"></app-lightbox>

@@ -6,17 +6,23 @@ import { environment } from '../../../../environments/environment';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from '../../../services/message.service';
 import { NumberFormatPipe } from "../../../pipes/number-format.pipe";
+import { LightboxComponent } from '../../system/lightbox/lightbox.component';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-pizzas',
   standalone: true,
-  imports: [CommonModule, FormsModule, NumberFormatPipe],
+  imports: [CommonModule, FormsModule, NumberFormatPipe, LightboxComponent],
   templateUrl: './pizzas.component.html',
   styleUrl: './pizzas.component.scss'
 })
 export class PizzasComponent implements OnInit {
+  lightboxVisible: boolean = false;
+  lightboxImage: string = '';
+
+  serverUrl = environment.serverUrl;
+
   currency = environment.currency;
   pizzas: Pizza[] = [];
   editMode = false;
@@ -154,6 +160,10 @@ export class PizzasComponent implements OnInit {
   }
 
   delete(id: number) {
+    let pizza = this.pizzas.find(item => item.id == id);
+    if (pizza && pizza.image != ''){
+      this.api.deleteImage(pizza.image!)
+    }
     this.api.delete('pizzas', id).then(res => {
       this.message.show('success', 'Siker', 'Pizza törölve!');
       this.confirmModal.hide();
@@ -184,4 +194,21 @@ export class PizzasComponent implements OnInit {
     });
   }
 
+  openLightbox(image: string) {
+    this.lightboxImage = this.serverUrl+'/uploads/'+image;
+    this.lightboxVisible = true;
+  }
+
+  cancel(){
+    this.pizza = {
+      id: 0,
+      name: '',
+      description: '',
+      image: '',
+      calories: 0,
+      price: 0
+    };
+    this.getPizzas();
+    this.formModal.hide();
+  }
 }
