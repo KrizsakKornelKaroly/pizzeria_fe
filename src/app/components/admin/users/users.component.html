@@ -1,1 +1,58 @@
-<p>users works!</p>
+<h3>Felhasználók kezelése</h3>
+
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <td>ID</td>
+            <td>Név</td>
+            <td>Email</td>
+            <td>Szerepkör</td>
+            <td>Telefonszám</td>
+            <td>Cím</td>
+            <td>Státusz</td>
+            <td class="text-end">Műveletek</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let user of users; let i = index">
+            <td>{{user.id}}</td>
+            <td>{{user.name}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.role}}</td>
+            <td *ngIf="user.phone">{{user.phone}}</td>
+            <td *ngIf="!user.phone" class="fst-italic emptyCol">Nincs megadva</td>
+            <td *ngIf="user.address">{{user.address}}</td>
+            <td *ngIf="!user.address" class="fst-italic emptyCol">Nincs megadva</td>
+            <td *ngIf="user.status" class="activeCol">Aktív</td>
+            <td *ngIf="!user.status" class="inactiveCol">Inaktív</td>
+            <td>
+                <button class="btn mr-2" title="Info" (click)="showInfo(user)"><i class="bi bi-info-circle infoColor"></i></button>
+
+                <button class="btn mr-2" *ngIf="user.status"><i class="bi bi-ban"></i></button>
+                <button class="btn mr-2" *ngIf="!user.status"><i class="bi bi-unlock"></i></button>
+            </td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="8" class="text-end">
+                Összesen <span class="p-0">0</span> felhasználó
+            </td>
+        </tr>
+    </tfoot>
+</table>
+
+
+
+<!--
+users page:
+tableben: összes adat megjelenít, (a pass alapvetően rejtett, gombbal felfedhető)
+műveletek: info, suspend/activate (saját magát nem lehet)
+
+info:
+table popup összes adat megjelenítése (user)
++ rendelések listázása (no., date, amount, status, műv: info)
+    (note: tárolni a pizza jelenlegi adatait a későbbi törlés/ármódosítás miatt)
+    -> all order info (popup)
+
+-->

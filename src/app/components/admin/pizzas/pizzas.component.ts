@@ -96,7 +96,8 @@ export class PizzasComponent implements OnInit {
       const res = await this.api.upload(formData);
 
       if (res.status != 200) {
-        this.message.show('danger', 'Hiba', 'Sikertelen fájl feltöltés!');
+        this.message.show('danger', 'Hiba', 'Sikertelen kép feltöltés!');
+        return;
       }
       else {
         this.pizza.image = res.data.filename;
@@ -148,7 +149,6 @@ export class PizzasComponent implements OnInit {
             price: 0
           }
           this.getPizzas();
-          return;
         });
       });
     }
