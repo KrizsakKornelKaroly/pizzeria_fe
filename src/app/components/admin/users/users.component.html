@@ -25,33 +25,147 @@
             <td *ngIf="!user.address" class="fst-italic emptyCol">Nincs megadva</td>
             <td *ngIf="user.status" class="activeCol">Aktív</td>
             <td *ngIf="!user.status" class="inactiveCol">Inaktív</td>
-            <td>
-                <button class="btn mr-2" title="Info" (click)="showInfo(user)"><i class="bi bi-info-circle infoColor"></i></button>
+            <td class="text-end">
+                <button class="btn mr-2" title="Info" (click)="showInfo(user)"><i
+                        class="bi bi-info-circle infoColor"></i></button>
 
-                <button class="btn mr-2" *ngIf="user.status"><i class="bi bi-ban"></i></button>
-                <button class="btn mr-2" *ngIf="!user.status"><i class="bi bi-unlock"></i></button>
+                <span *ngIf="user.id != loggedInUser.id!">
+                    <button class="btn mr-2 text-danger" *ngIf="user.status" (click)="deactivateUser(user)"><i
+                            class="bi bi-ban"></i></button>
+                    <button class="btn mr-2 text-success" *ngIf="!user.status" (click)="activateUser(user)"><i
+                            class="bi bi-unlock"></i></button>
+                </span>
             </td>
         </tr>
     </tbody>
     <tfoot>
         <tr>
             <td colspan="8" class="text-end">
-                Összesen <span class="p-0">0</span> felhasználó
+                Összesen <span class="p-0">{{users.length}}</span> felhasználó
             </td>
         </tr>
     </tfoot>
 </table>
 
 
+<!-- UserDataModal -->
+<div class="modal fade modal-xl" id="userInfoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">{{selectedUser.name}} adatai</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body row">
+                <!-- User profil bal oldala-->
+                <div class="col-4">
+                    <div class="d-flex flex-column align-items-center">
+                        <i class="bi bi-person-circle" style="font-size: 5rem;"></i>
+                        <p class="text-center">{{selectedUser.name}}</p>
+                    </div>
+                </div>
+                <!-- User profil jobb oldala: adatok + accordion: rendelések-->
+                <div class="col-8 border-start border-2">
 
-<!--
+                    <div class="row mb-2">
+                        <div class="col-5 fw-bold">Felhasználói ID:</div>
+                        <div class="col-7">{{selectedUser.id}}</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-5 fw-bold">Email:</div>
+                        <div class="col-7">{{selectedUser.email}}</div>
+                    </div>
+                    <!-- TODO: encrypted password show on button press-->
+                    <div class="row mb-2">
+                        <div class="col-5 fw-bold">Szerepkör:</div>
+                        <div class="col-7">{{selectedUser.role}}</div>
+                    </div>
+                    <div class="row mb-2" *ngIf="selectedUser.phone">
+                        <div class="col-5 fw-bold">Telefonszám:</div>
+                        <div class="col-7">{{selectedUser.phone}}</div>
+                    </div>
+                    <div class="row mb-2" *ngIf="!selectedUser.phone">
+                        <div class="col-5 fw-bold">Telefonszám:</div>
+                        <div class="col-7 fst-italic emptyCol">Nincs megadva</div>
+                    </div>
+                    <div class="row mb-2" *ngIf="selectedUser.address">
+                        <div class="col-5 fw-bold">Cím:</div>
+                        <div class="col-7">{{selectedUser.address}}</div>
+                    </div>
+                    <div class="row mb-2" *ngIf="!selectedUser.address">
+                        <div class="col-5 fw-bold">Cím:</div>
+                        <div class="col-7 fst-italic emptyCol">Nincs megadva</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-5 fw-bold">Regisztráció dátuma:</div>
+                        <div class="col-7">{{selectedUser.reg | timeFormat}}</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-5 fw-bold">Utolsó bejelentkezés:</div>
+                        <div class="col-7">{{selectedUser.last | timeFormat}}</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-5 fw-bold">Státusz:</div>
+                        <div class="col-7">{{selectedUser.status ? 'Aktív' : 'Inaktív'}}</div>
+                    </div>
+
+                    <div>
+                        <div class="accordion accordion-flush" id="accordionFlushExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#flush-collapseOne" aria-expanded="false"
+                                        aria-controls="flush-collapseOne">
+                                        Rendelések
+                                    </button>
+                                </h2>
+                                <div id="flush-collapseOne" class="accordion-collapse collapse"
+                                    data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body">
+                                        <table class="table table-hover table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <td>#</td>
+                                                    <td>Dátum</td>
+                                                    <td>Összeg</td>
+                                                    <td>Státusz</td>
+                                                    <td>Műveletek</td>
+                                                </tr>
+                                            </thead>
+
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!--
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+      -->
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!--
 users page:
-tableben: összes adat megjelenít, (a pass alapvetően rejtett, gombbal felfedhető)
-műveletek: info, suspend/activate (saját magát nem lehet)
+page: some data - done
+műveletek: info, suspend/activate (saját magát nem lehet) - done
+tableben: összes megjelenít - done
+ (a pass alapvetően rejtett, gombbal felfedhető) - TBI
 
 info:
-table popup összes adat megjelenítése (user)
-+ rendelések listázása (no., date, amount, status, műv: info)
+table popup összes adat megjelenítése (user) - DONE
++ rendelések listázása (no., date, amount, status, műv: info) - TBI
     (note: tárolni a pizza jelenlegi adatait a későbbi törlés/ármódosítás miatt)
     -> all order info (popup)
 
