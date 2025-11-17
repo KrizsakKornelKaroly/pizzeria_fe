@@ -4,6 +4,7 @@ import { CommonModule } from "@angular/common";
 import { ApiService } from '../../../services/api.service';
 import { AuthService } from '../../../services/auth.service';
 import { TimeFormatPipe } from "../../../pipes/time-format.pipe";
+import { Order } from '../../../interfaces/order';
 
 declare var bootstrap: any;
 
@@ -16,22 +17,30 @@ declare var bootstrap: any;
 })
 export class UsersComponent implements OnInit {
 
-  userInfoModal: any;
 
-  loggedInUser : User = {
+  loggedInUser: User = {
     name: '',
     email: '',
     password: '',
     role: ''
   };
-  users: User[] = [];
-
   selectedUser: User = {
+
     name: "test",
     email: '',
     password: '',
     role: ''
   };
+
+  selectedOrders: Order[] = [];
+
+  userInfoModal: any;
+  users: User[] = [];
+
+  currentPage = 1;
+  pageSize = 5;
+  totalPages = 1;
+  pagedUsers: User[] = [];
 
   constructor(
     private api: ApiService,
@@ -48,27 +57,52 @@ export class UsersComponent implements OnInit {
   getUsers() {
     this.api.selectAll('users').then(res => {
       this.users = res.data;
+      this.totalPages = Math.ceil(this.users.length / this.pageSize);
+      this.setPage(1);
     });
   }
 
   async activateUser(user: User) {
-      await this.api.update('users', user.id!, { status: 1 }).then(res => {
-        user.status = true;
-      });
-      this.getUsers();
+    await this.api.update('users', user.id!, { status: 1 }).then(res => {
+      user.status = true;
+    });
+    this.getUsers();
   }
 
   async deactivateUser(user: User) {
-      await this.api.update('users', user.id!, { status: 0 }).then(res => {
-        user.status = false;
-      });
-      this.getUsers();
+    await this.api.update('users', user.id!, { status: 0 }).then(res => {
+      user.status = false;
+    });
+    this.getUsers();
   }
 
-  showInfo(user: User) { 
+  showInfo(user: User) {
     this.selectedUser = user;
+    this.getOrders(user);
+
     this.userInfoModal.show();
   }
 
+  hideInfo() {
+    this.userInfoModal.hide();
+    this.getUsers();
+  }
 
+  getOrders(user: User) {
+    this.api.selectWhere('orders', 'user_id', 'eq', user.id!).then(res => {
+      this.selectedOrders = res.data;
+    });
+  }
+
+  setPage(page: number) {
+    this.currentPage = page;
+    const startIndex = (page - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.pagedUsers = this.users.slice(startIndex, endIndex);
+
+  }
+
+  viewOrderDetails(order: Order) {
+    
+  }
 }

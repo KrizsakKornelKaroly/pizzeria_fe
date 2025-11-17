@@ -15,3 +15,9 @@
 .infoColor{
     color: cadetblue;
 }
+
+.inactive > td{
+    color:grey;
+    text-decoration: line-through;
+    font-style: italic;
+}

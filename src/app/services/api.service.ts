@@ -40,7 +40,7 @@ export class ApiService {
     catch (error: any) {
       return {
         status: 500,
-        message: error.response
+        message: error.response.data.error
       }
     }
   }
@@ -117,6 +117,24 @@ export class ApiService {
     }
 
   }
+
+  async selectWhere(table: string, column: string, op: string, value: any): Promise<ApiResponse> {
+    try {
+      const response = await axios.get(`${this.SERVER}/${table}/${column}/${op}/${value}`);
+      return {
+        status: 200,
+        data: response.data
+      };
+    }
+    catch (error: any) {
+      console.log(error.message);
+      return {
+        status: 500,
+        message: 'Hiba történt az adatok elérésekor!'
+      };
+    }
+  }
+
 
   async insert(table: string, data: any) {
     try {
