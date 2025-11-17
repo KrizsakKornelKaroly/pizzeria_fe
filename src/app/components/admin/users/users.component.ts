@@ -5,13 +5,16 @@ import { ApiService } from '../../../services/api.service';
 import { AuthService } from '../../../services/auth.service';
 import { TimeFormatPipe } from "../../../pipes/time-format.pipe";
 import { Order } from '../../../interfaces/order';
+import { OrderItem } from '../../../interfaces/orderitem';
+import { NumberFormatPipe } from "../../../pipes/number-format.pipe";
+import { Pizza } from '../../../interfaces/pizza';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, TimeFormatPipe],
+  imports: [CommonModule, TimeFormatPipe, NumberFormatPipe],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
@@ -33,9 +36,13 @@ export class UsersComponent implements OnInit {
   };
 
   selectedOrders: Order[] = [];
+  selectedOrderItems: OrderItem[] = [];
 
+  orderIdForDisplay = 0;
   userInfoModal: any;
+  orderItemsModal: any;
   users: User[] = [];
+  pizzas: Pizza[] = [];
 
   currentPage = 1;
   pageSize = 5;
@@ -50,7 +57,9 @@ export class UsersComponent implements OnInit {
   ngOnInit(): void {
     this.loggedInUser = this.auth.loggedUser()[0];
     this.getUsers();
+    this.getPizzas();
     this.userInfoModal = new bootstrap.Modal('#userInfoModal');
+    this.orderItemsModal = new bootstrap.Modal('#orderItemsModal');
   }
 
 
@@ -59,6 +68,12 @@ export class UsersComponent implements OnInit {
       this.users = res.data;
       this.totalPages = Math.ceil(this.users.length / this.pageSize);
       this.setPage(1);
+    });
+  }
+
+  getPizzas() {
+    this.api.selectAll('pizzas').then(res => {
+      this.pizzas = res.data;
     });
   }
 
@@ -103,6 +118,27 @@ export class UsersComponent implements OnInit {
   }
 
   viewOrderDetails(order: Order) {
-    
+    this.api.selectWhere('order_items', 'order_id', 'eq', order.id!).then(res => {
+      this.selectedOrderItems = res.data;
+      this.orderIdForDisplay = order.id!;
+    });
+
+
+    this.userInfoModal.hide();
+    this.orderItemsModal.show();
+  }
+
+  hideOrderItemsModal() {
+    this.orderItemsModal.hide();
+    this.userInfoModal.show();
+  }
+
+  getPizzaName(pizzaId: number): string {
+    let pizzaName = '';
+    const pizza = this.pizzas.find(p => p.id == pizzaId);
+    if (pizza) {
+      pizzaName = pizza.name;
+    }
+    return pizzaName;
   }
 }
