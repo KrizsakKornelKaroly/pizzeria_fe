@@ -8,6 +8,7 @@ import { Order } from '../../../interfaces/order';
 import { OrderItem } from '../../../interfaces/orderitem';
 import { NumberFormatPipe } from "../../../pipes/number-format.pipe";
 import { Pizza } from '../../../interfaces/pizza';
+import { environment } from '../../../../environments/environment';
 
 declare var bootstrap: any;
 
@@ -20,6 +21,7 @@ declare var bootstrap: any;
 })
 export class UsersComponent implements OnInit {
 
+  currency = environment.currency;
 
   loggedInUser: User = {
     name: '',
@@ -140,5 +142,14 @@ export class UsersComponent implements OnInit {
       pizzaName = pizza.name;
     }
     return pizzaName;
+  }
+
+  getPizzaDesc(pizzaId: number): string {
+    let pizzaDesc = '';
+    const pizza = this.pizzas.find(p => p.id == pizzaId);
+    if (pizza) {
+      pizzaDesc = pizza.description!;
+    }
+    return pizzaDesc;
   }
 }

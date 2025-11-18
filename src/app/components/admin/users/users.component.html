@@ -86,8 +86,8 @@
                 <!-- User profil bal oldala-->
                 <div class="col-4">
                     <div class="d-flex flex-column align-items-center">
-                        <i class="bi bi-person-circle" style="font-size: 5rem;"></i>
-                        <p class="text-center">{{selectedUser.name}}</p>
+                        <i class="bi bi-person-circle profilePic"></i>
+                        <p class="text-center fs-5">{{selectedUser.name}}</p>
                     </div>
                 </div>
                 <!-- User profil jobb oldala: adatok + accordion: rendelések-->
@@ -159,11 +159,14 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                <tr>
+                                                    <td colspan="5" class="text-center" *ngIf="selectedOrders.length == 0">A felhasználó még nem adott le rendelést</td>
+                                                </tr>
                                                 <tr *ngFor="let order of selectedOrders">
                                                     <td>{{order.id}}</td>
                                                     <td>{{order.created_at | timeFormat}}</td>
-                                                    <td>{{order.total}}</td>
-                                                    <td>{{order.status}}</td>
+                                                    <td>{{order.total | numberFormat}} {{currency}}</td>
+                                                    <td>{{(order.status == 'pending' ? 'Folyamatban' : 'Teljesítve')}}</td>
                                                     <td class="text-end">
                                                         <button class="btn mr-2" title="Info"
                                                             (click)="viewOrderDetails(order)"><i
@@ -199,6 +202,7 @@
                         <tr>
                             <td>Id</td>
                             <td>Pizza neve</td>
+                            <td>Leírás</td>
                             <td>Mennyiség</td>
                             <td>Ár</td>
                             <td>Dátum</td>
@@ -209,8 +213,9 @@
                         <tr *ngFor="let row of selectedOrderItems">
                             <td>{{row.id}}</td>
                             <td>{{getPizzaName(row.pizza_id)}}</td>
+                            <td>{{getPizzaDesc(row.pizza_id)}}</td>
                             <td>{{row.quantity}}</td>
-                            <td>{{row.price | numberFormat}}</td>
+                            <td>{{row.price | numberFormat}} {{currency}}</td>
                             <td>{{row.created_at | timeFormat}}</td>
                             <td></td>
                         </tr>
