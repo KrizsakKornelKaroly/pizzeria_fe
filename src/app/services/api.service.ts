@@ -45,6 +45,21 @@ export class ApiService {
     }
   }
 
+  async sendmail(data: object) : Promise<ApiResponse> {
+    try{
+      const response = await axios.post(`${this.SERVER}/sendmail`, data);
+      return {
+        status: 200,
+        message: response.data.message
+      }
+    } catch (error: any){
+      return {
+        status: 500,
+        message: error.response.data.error
+      };
+    }
+  }
+
   async upload(formdata: FormData): Promise<ApiResponse> {
     try {
       const response = await axios.post(`${this.SERVER}/upload`, formdata);
@@ -134,7 +149,6 @@ export class ApiService {
       };
     }
   }
-
 
   async insert(table: string, data: any) {
     try {
