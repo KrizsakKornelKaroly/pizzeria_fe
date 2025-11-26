@@ -77,12 +77,10 @@ export class PizzalistComponent implements OnInit {
     pizza!.amount = 0;
 
     this.api.selectWhere('carts', 'userId', 'eq', data.userId).then(res => {
-      console.log(res.data);
-
       let idx = -1;
 
       if (res.data.length > 0) {
-        let idx = res.data.findIndex((item: { pizzaId: number; }) => item.pizzaId == data.pizzaId);
+       idx = res.data.findIndex((item: { pizzaId: number; }) => item.pizzaId == data.pizzaId);
       }
 
       if (idx > -1) {
@@ -96,11 +94,7 @@ export class PizzalistComponent implements OnInit {
           this.message.show('success', 'Siker', 'A tétel sikeresen hozzáadva a kosárhoz!');
         });
       }
-
-
-
     });
-
   }
 
   filterPizzas() {
