@@ -5,4 +5,5 @@ export interface Pizza {
     image?: string;
     calories: number;
     price: number;
+    amount? : number;
 }

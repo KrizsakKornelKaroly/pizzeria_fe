@@ -1,1 +1,51 @@
-<p>pizzalist works!</p>
+<h3>Pizzák listája</h3>
+
+<div *ngIf="!isLoggedIn">
+    A rendeléshez kérjük, <a href="/login">jelentkezzen be</a> vagy <a href="/registration">regisztráljon</a> egy fiókot!
+</div>
+
+<div class="mb-3 text-end mt-0 d-flex justify-content-end flex-row">
+    <input type="text" class="form-control w-25"  placeholder="Keresés..." [(ngModel)]="searchTerm" (input)="filterPizzas()"/>
+</div>
+
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Kép</th>
+            <th>Megnevezés</th>
+            <th>Leírás</th>
+            <th class="text-end">Kalória</th>
+            <th class="text-end">Ár</th>
+            <th class="text-end" *ngIf="isLoggedIn">Kosárba</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let pizza of filteredPizzas, let i = index">
+            <td>{{i+1}}</td>
+            <td>
+                <img *ngIf="pizza.image" src="{{serverUrl}}/uploads/{{pizza.image}}" alt="{{pizza.name}}" class="thumbnail" (click)="openLightbox(pizza.image)">
+                <img *ngIf="!pizza.image" src="noimg.png" alt="{{pizza.name}}" class="thumbnail">
+
+            </td>
+            <td valign="middle">{{pizza.name}}</td>
+            <td valign="middle">{{pizza.description}}</td>
+            <td valign="middle"><small>{{pizza.calories | numberFormat}}&nbsp;kcal</small></td>
+            <td valign="middle" class="text-end"><strong>{{pizza.price | numberFormat}}&nbsp;</strong>{{currency}}</td>
+            <td *ngIf="isLoggedIn" valign="middle" class="text-end">
+                <input type="number" min="0" class="form-control d-inline-block w-50 mr-2" [(ngModel)]="pizza.amount"/>
+                <button class="btn"><i class="bi bi-cart cartColor" (click)="addToCart(pizza.id)"></i></button>
+            </td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="6" class="text-end" *ngIf="!isLoggedIn">Összesen <span>{{pizzas.length}}</span> pizza</td>
+            <td colspan="7" class="text-end" *ngIf="isLoggedIn">Összesen <span>{{pizzas.length}}</span> pizza</td>
+        </tr>
+    </tfoot>
+
+</table>
+
+
+<app-lightbox [imageUrl]="lightboxImage" [visible]="lightboxVisible" (closed)="lightboxVisible = false"></app-lightbox>
