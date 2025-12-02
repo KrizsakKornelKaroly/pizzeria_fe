@@ -8,6 +8,7 @@ import { NumberFormatPipe } from "../../../pipes/number-format.pipe";
 import { LightboxComponent } from '../lightbox/lightbox.component';
 import { environment } from '../../../../environments/environment';
 import { MessageService } from '../../../services/message.service';
+import { CartService } from '../../../services/cart.service';
 
 @Component({
   selector: 'app-pizzalist',
@@ -21,6 +22,7 @@ export class PizzalistComponent implements OnInit {
   constructor(
     private api: ApiService,
     private auth: AuthService,
+    private cart: CartService,
     private message: MessageService
   ) { }
 
@@ -92,6 +94,7 @@ export class PizzalistComponent implements OnInit {
       else {
         this.api.insert('carts', data).then(res => {
           this.message.show('success', 'Siker', 'A tétel sikeresen hozzáadva a kosárhoz!');
+          this.cart.refreshCartCount();
         });
       }
     });

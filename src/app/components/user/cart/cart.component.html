@@ -18,22 +18,31 @@
             <td class="text-end">{{item.price | numberFormat}}&nbsp;{{currency}}</td>
 
 
-            <td class="text-end"><input type="number" min="0" class="form-control d-inline-block w-25 mr-2" [(ngModel)]="item.amount"/>&nbsp;db</td>
+            <td class="text-end"><input type="number" min="0" class="form-control d-inline-block w-50 mr-2" [(ngModel)]="item.amount"/>&nbsp;db</td>
 
             
 
             <td class="text-end"> {{item.total | numberFormat}}&nbsp;{{currency}}</td>
             <td class="text-end">
-                <button class="btn"><i class="bi bi-pencil"></i></button>
-                <button class="btn"><i class="bi bi-trash"></i></button>
+                <button class="btn" (click)="update(item)"><i class="bi bi-pencil"></i></button>
+                <button class="btn" (click)="remove(item.id)"><i class="bi bi-trash"></i></button>
             </td>
         </tr>
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="5" class="text-end"><strong>Végösszeg:</strong></td>
-            <td class="text-end"><strong>{{alltotal}}&nbsp;{{currency}}</strong></td>
+            <td colspan="4" class="text-end"><strong>Végösszeg:</strong></td>
+            <td class="text-end"><strong>{{alltotal | numberFormat}}&nbsp;{{currency}}</strong></td>
+            <td>
+                <button class="btn btn-outline-danger btn-sm" (click)="removeAll()"><i class="bi bi-trash"></i>Kosár&nbsp;ürítése</button>
+            </td>
         </tr>
     </tfoot>
 
 </table>
+
+
+
+<div>
+    
+</div>

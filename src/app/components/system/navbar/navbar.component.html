@@ -11,7 +11,7 @@
                 <a class="nav-link" aria-current="page" href="#" *ngFor="let item of navItems"
                     routerLink="{{item.url}}">
                     <i class="bi bi-{{item.icon}}"></i>&nbsp;{{item.name}} 
-                    <span class="badge text-bg-danger rounded-pill">{{item.badge}}</span></a>
+                    <span class="badge text-bg-danger rounded-pill" *ngIf="item.badge != 0">{{item.badge}}</span></a>
 
             </div>
         </div>
